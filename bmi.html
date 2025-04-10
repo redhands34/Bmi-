@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BMI Analyzer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #83a4d4, #b6fbff);
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 500px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      margin: auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0077ff;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .card {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #f4f4f4;
+      text-align: left;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .card img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .underweight { border-left: 6px solid #ffcc00; }
+    .normal { border-left: 6px solid #4CAF50; }
+    .overweight { border-left: 6px solid #ff9800; }
+    .obese { border-left: 6px solid #f44336; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>BMI Analyzer</h2>
+    <label>Name</label>
+    <input type="text" id="name">
+
+    <label>Age</label>
+    <input type="number" id="age">
+
+    <label>Height (feet)</label>
+    <input type="number" id="heightFeet">
+
+    <label>Height (inches)</label>
+    <input type="number" id="heightInches">
+
+    <label>Weight (kg)</label>
+    <input type="number" id="weight">
+
+    <button onclick="calculateBMI()">Calculate BMI</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculateBMI() {
+      const name = document.getElementById("name").value;
+      const age = document.getElementById("age").value;
+      const feet = parseInt(document.getElementById("heightFeet").value);
+      const inches = parseInt(document.getElementById("heightInches").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+
+      if (!name || !age || isNaN(feet) || isNaN(inches) || isNaN(weight)) {
+        alert("Please fill in all fields correctly.");
+        return;
+      }
+
+      const heightMeters = ((feet * 12) + inches) * 0.0254;
+      const bmi = weight / (heightMeters ** 2);
+      const roundedBMI = bmi.toFixed(2);
+
+      let category = "";
+      let advice = "";
+      let cardClass = "";
+      let imageURL = "";
+
+      if (bmi < 18.5) {
+        category = "Underweight";
+        advice = "Eat more frequently, add healthy calories, and do strength training.";
+        cardClass = "underweight";
+        imageURL = "https://cdn.pixabay.com/photo/2016/11/22/19/15/girl-1853681_960_720.jpg";
+      } else if (bmi < 24.9) {
+        category = "Normal";
+        advice = "Maintain your weight with balanced meals and regular exercise.";
+        cardClass = "normal";
+        imageURL = "https://cdn.pixabay.com/photo/2017/01/20/15/06/woman-1995624_960_720.jpg";
+      } else if (bmi < 29.9) {
+        category = "Overweight";
+        advice = "Incorporate cardio workouts, reduce sugar, and monitor portions.";
+        cardClass = "overweight";
+        imageURL = "https://cdn.pixabay.com/photo/2017/03/26/23/00/running-2179705_960_720.jpg";
+      } else {
+        category = "Obese";
+        advice = "Consult a doctor, follow a weight-loss plan, and increase physical activity.";
+        cardClass = "obese";
+        imageURL = "https://cdn.pixabay.com/photo/2015/01/31/12/37/weight-loss-618912_960_720.jpg";
+      }
+
+      document.getElementById("result").innerHTML = `
+        <h3>Hello, ${name}!</h3>
+        <p>Your BMI is <strong>${roundedBMI}</strong> (${category})</p>
+        <div class="card ${cardClass}">
+          <img src="${imageURL}" alt="${category} advice">
+          <h4>Advice:</h4>
+          <p>${advice}</p>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
